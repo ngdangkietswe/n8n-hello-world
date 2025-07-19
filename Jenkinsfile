@@ -1,18 +1,9 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3' // Optional: fallback if ./mvnw doesn't exist
-    }
-
     environment {
         DOCKER_IMAGE = '01092002/java-backend'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
-    }
-
-    options {
-        timestamps()
-        ansiColor('xterm')
     }
 
     stages {
