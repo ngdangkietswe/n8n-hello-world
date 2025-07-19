@@ -1,0 +1,46 @@
+version: "3.1"
+
+services:
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    environment:
+      - DB_TYPE=sqlite
+      - DB_SQLITE_VACUUM_ON_STARTUP=true
+      - N8N_HOST=n8n.localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=root
+      - N8N_BASIC_AUTH_PASSWORD=123456
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    restart: always
+
+  java-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java-backend
+    ports:
+      - "8080:8080"
+    restart: always
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8081:8080" # Jenkins UI
+      - "50000:50000" # Jenkins agent communication
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:
+    driver: local
