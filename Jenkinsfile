@@ -4,9 +4,20 @@ pipeline {
     environment {
         DOCKER_IMAGE = '01092002/java-backend'
         IMAGE_TAG = "${env.BUILD_NUMBER}"
+        REPO_URL = 'https://github.com/ngdangkietswe/n8n-hello-world.git'
+        BRANCH = 'main'
     }
 
     stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    echo "🔄 Cloning repository ${REPO_URL}..."
+                    git branch: "${BRANCH}", url: "${REPO_URL}"
+                }
+            }
+        }
+
         stage('Build Java') {
             steps {
                 script {
