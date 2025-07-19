@@ -12,6 +12,7 @@ pipeline {
                 script {
                     echo "📦 Building Java project..."
                     if (fileExists('./mvnw')) {
+                        sh 'chmod +x ./mvnw'
                         sh './mvnw clean package -DskipTests'
                     } else {
                         sh 'mvn clean package -DskipTests'
